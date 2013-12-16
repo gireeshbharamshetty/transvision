@@ -27,13 +27,32 @@ switch ($url['path']) {
         $view  = 'search_form';
         $show_title = false;
         break;
+    case '3locales':
+        // Bootstrap l10n
+        require_once INC . 'l10n-init.php';
+
+        // Include Search Options
+        require_once INC . 'search_options.php';
+
+        // Import all strings for source and target locales + search process
+        require_once INC . 'recherche.php';
+
+        if (WEBSERVICE) {
+            $view = 'webservice';
+            $template = false;
+            break;
+        }
+
+        $view = 'search_form';
+        $show_title = false;
+        break;
     case 'news':
-        $view  = 'changelog';
+        $view = 'changelog';
         $page_title = 'Transvision News. Version Notes';
         $page_descr = '';
         break;
     case 'stats':
-        $view  = 'stats';
+        $view = 'stats';
         $page_title = 'Statistics';
         $page_descr = 'Light usage statistics.';
         break;
