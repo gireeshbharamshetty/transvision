@@ -88,4 +88,60 @@ class Strings
     {
         return mb_strlen(strip_tags($str), 'UTF-8');
     }
+
+    /**
+     * Get the closest string in an array
+     * @param string $needle string to search for
+     * @param array $haystack array of strings to search into
+     * @return string closest string to $needle in $haystack
+     */
+    public static function getClosestString($needle, $haystack)
+    {
+        $similarity = 0;
+
+        foreach ($haystack as $string) {
+            similar_text($needle, $string, $percent);
+            if ($percent >= $similarity) {
+                $closest_string = $string;
+                $similarity = $percent;
+            }
+        }
+
+        return isset($closest_string) ? $closest_string : $needle;
+    }
+
+    /**
+     * Search for similar strings in an array
+     *
+     * @param string $needle string to search for
+     * @param array $haystack array of strings to search into
+     * @param int $number number of results we want
+     * @return array closest strings to $needle in $haystack or empty array if no match
+     */
+    public static function getSimilar($needle, $haystack, $number = 1)
+    {
+        $similarity = 0;
+        $matches = [];
+
+        foreach ($haystack as $string) {
+
+            similar_text($needle, $string, $percent);
+
+            if ($percent >= $similarity && ! in_array($string, $matches)) {
+                if (count($matches) < $number) {
+                    $matches[] = $string;
+                } else {
+                    array_shift($matches);
+                    $matches[] = $string;
+                }
+
+                $similarity = $percent;
+            } elseif (count($matches) < $number) {
+                // we don't want to return less strings than $number
+                $matches[] = $string;
+            }
+        }
+
+        return array_reverse($matches);
+    }
 }
