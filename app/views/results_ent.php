@@ -20,6 +20,28 @@ $table  = "<table class='collapsable'>
                 {$extra_column_header}
               </tr>";
 
+// Display a search hint for the closest string we have if we have no search results
+if (count($entities) == 0) {
+    $merged_strings = [];
+
+    $best_matches = Strings::getSimilar($initial_search, array_keys($tmx_source), 3);
+
+    $proposed_search = $_GET;
+
+    print "<p>We couldn't find this entity, did you mean:</p>";
+    print '<ul>';
+
+    foreach ($best_matches as $match) {
+        $proposed_search['recherche'] = $match;
+        $query = '?' .http_build_query($proposed_search, '', '&amp;');
+
+        print '<li><a href="' . $query . '">' . $match . '</a></li>';
+    }
+
+    print '</ul>';
+    return;
+}
+
 foreach ($entities as $entity) {
     if ($check['repo'] == 'mozilla_org') {
         $path_locale1 = VersionControl::svnPath($source_locale, $check['repo'], $entity);
