@@ -90,27 +90,6 @@ class Strings
     }
 
     /**
-     * Get the closest string in an array
-     * @param string $needle string to search for
-     * @param array $haystack array of strings to search into
-     * @return string closest string to $needle in $haystack
-     */
-    public static function getClosestString($needle, $haystack)
-    {
-        $similarity = 0;
-
-        foreach ($haystack as $string) {
-            similar_text($needle, $string, $percent);
-            if ($percent >= $similarity) {
-                $closest_string = $string;
-                $similarity = $percent;
-            }
-        }
-
-        return isset($closest_string) ? $closest_string : $needle;
-    }
-
-    /**
      * Search for similar strings in an array
      *
      * @param string $needle string to search for
