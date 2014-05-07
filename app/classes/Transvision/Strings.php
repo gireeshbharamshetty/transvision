@@ -94,7 +94,7 @@ class Strings
      *
      * @param string $needle string to search for
      * @param array $haystack array of strings to search into
-     * @param int $number number of results we want
+     * @param int $number optional, number of results we want, defaults to 1
      * @return array closest strings to $needle in $haystack or empty array if no match
      */
     public static function getSimilar($needle, $haystack, $number = 1)
@@ -107,16 +107,17 @@ class Strings
             similar_text($needle, $string, $percent);
 
             if ($percent >= $similarity && ! in_array($string, $matches)) {
+
+                $similarity = $percent;
+
                 if (count($matches) < $number) {
                     $matches[] = $string;
                 } else {
                     array_shift($matches);
                     $matches[] = $string;
                 }
-
-                $similarity = $percent;
             } elseif (count($matches) < $number) {
-                // we don't want to return less strings than $number
+                // We don't want to return less strings than $number
                 $matches[] = $string;
             }
         }
